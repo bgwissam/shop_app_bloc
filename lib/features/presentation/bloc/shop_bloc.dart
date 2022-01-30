@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:shop_app/features/domain/model/product_model.dart';
 import 'package:shop_app/features/domain/repositories/shop_data_provider.dart';
 

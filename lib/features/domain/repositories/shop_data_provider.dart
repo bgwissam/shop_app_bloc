@@ -11,7 +11,7 @@ class ShopDataProvider {
         description:
             'A set of 3 coffee tables of three different sizes, they are made completely of wood material and finished with a high quality paint product',
         quantity: 1,
-        price: 250,
+        price: 75,
       ),
       Product(
         id: '2',
@@ -20,7 +20,7 @@ class ShopDataProvider {
         description:
             'A high quality fibre with memory faom installed, Rlaxon chair is very comfortable and relaxing, made of the highest quality products from wood, metal and fabric.',
         quantity: 1,
-        price: 250,
+        price: 560,
       ),
       Product(
         id: '3',
@@ -29,7 +29,7 @@ class ShopDataProvider {
         description:
             'A set of 6 colorful cups that is adequate for family and friends, the set features a variety of colors in which you can chose from',
         quantity: 1,
-        price: 250,
+        price: 2,
       ),
       Product(
         id: '4',
@@ -38,7 +38,7 @@ class ShopDataProvider {
         description:
             'High quality rugs made especially to keep your home clean from street dirt, our welcome rugs are perfect if you suffer from dirty shoes that contaminate your home. They come in different sizes and shapes for your choice.',
         quantity: 1,
-        price: 250,
+        price: 16,
       ),
       Product(
         id: '5',
@@ -57,15 +57,15 @@ class ShopDataProvider {
   //will get the items in the cart
   Future<StoreProducts> getCartItems() async {
     List<Product> demoProducts = [
-      Product(
-        id: '1',
-        name: 'Coffee Tables',
-        imageUrl: 'assets/images/coffee_table.jpeg',
-        description:
-            'A set of 3 coffee tables of three different sizes, they are made completely of wood material and finished with a high quality paint product',
-        quantity: 1,
-        price: 250,
-      ),
+      // Product(
+      //   id: '1',
+      //   name: 'Coffee Tables',
+      //   imageUrl: 'assets/images/coffee_table.jpeg',
+      //   description:
+      //       'A set of 3 coffee tables of three different sizes, they are made completely of wood material and finished with a high quality paint product',
+      //   quantity: 1,
+      //   price: 75,
+      // ),
     ];
 
     return StoreProducts(items: demoProducts);

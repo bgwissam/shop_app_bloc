@@ -21,12 +21,4 @@ class StoreProducts {
   StoreProducts({
     this.items,
   });
-
-  void addProduct(Product product) {
-    items.add(product);
-  }
-
-  void removeProduct(Product product) {
-    items.add(product);
-  }
 }

@@ -41,23 +41,48 @@ class _HomePageState extends State<HomePage> {
         builder: (context, state) {
           return Scaffold(
               appBar: AppBar(
-                title: Text('Demo Shopping App'),
+                title: const Text('Demo Shopping App'),
                 backgroundColor: Colors.purpleAccent,
                 actions: [
-                  IconButton(
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => BlocProvider.value(
-                              value: BlocProvider.of<ShopBloc>(context)
-                                ..add(AddingToCartEvent(cartItems: cartItems)),
-                              child: CartDetails(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 7),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: IconButton(
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => BlocProvider.value(
+                                    value: BlocProvider.of<ShopBloc>(context)
+                                      ..add(AddingToCartEvent(
+                                          cartItems: cartItems)),
+                                    child: const CartDetails(),
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.shopping_bag_outlined,
+                              size: 40,
                             ),
                           ),
-                        );
-                      },
-                      icon: Icon(Icons.shopping_basket))
+                        ),
+                        Positioned(
+                          right: 15,
+                          bottom: 10,
+                          child: Container(
+                              padding: const EdgeInsets.all(2),
+                              child: Text(
+                                '${cartItems.length}',
+                                style: const TextStyle(fontSize: 13),
+                                textAlign: TextAlign.center,
+                              )),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
               backgroundColor: Colors.white,
@@ -102,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                     child: Card(
                       elevation: 4,
                       child: Container(
-                        padding: EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(12),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,7 +153,19 @@ class _HomePageState extends State<HomePage> {
                               child: Text('Add'),
                               onPressed: () {
                                 setState(() {
-                                  cartItems.add(storeItems[index]);
+                                  if (cartItems.isNotEmpty) {
+                                    if (cartItems.contains(storeItems[index])) {
+                                      for (var item in cartItems) {
+                                        if (item.id == storeItems[index].id) {
+                                          item.quantity++;
+                                        }
+                                      }
+                                    } else {
+                                      cartItems.add(storeItems[index]);
+                                    }
+                                  } else {
+                                    cartItems.add(storeItems[index]);
+                                  }
                                 });
                               },
                             )

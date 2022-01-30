@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/features/domain/model/product_model.dart';
 import 'package:shop_app/features/presentation/bloc/shop_bloc.dart';
+import 'package:shop_app/features/presentation/widgets/snack_bar.dart';
+
+import 'cart_page.dart';
 
 class ProductDetail extends StatefulWidget {
   const ProductDetail({Key key, this.item}) : super(key: key);
@@ -12,16 +15,17 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   List<Product> cartItems = [];
+  SnackBarWidget _snackBarWidget = SnackBarWidget();
   bool _isLoading = true;
-  int quantity = 0;
+  int quantity = 1;
   Size _size;
 
   @override
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
+    _snackBarWidget.context = context;
     return BlocBuilder<ShopBloc, ShopState>(
       builder: (context, state) {
-        print('state: $state');
         if (state is PageLoaded) {
           _isLoading = false;
         }
@@ -33,10 +37,54 @@ class _ProductDetailState extends State<ProductDetail> {
           appBar: AppBar(
             title: Text(widget.item.name),
             backgroundColor: Colors.purpleAccent,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: IconButton(
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                value: BlocProvider.of<ShopBloc>(context)
+                                  ..add(
+                                      AddingToCartEvent(cartItems: cartItems)),
+                                child: CartDetails(),
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.shopping_bag_outlined,
+                          size: 40,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 15,
+                      bottom: 10,
+                      child: cartItems != null && cartItems.isNotEmpty
+                          ? Container(
+                              padding: const EdgeInsets.all(2),
+                              child: Text(
+                                '${cartItems.length}',
+                                style: TextStyle(fontSize: 13),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
           body: !_isLoading
               ? _buildItemDetailsWidget()
-              : Center(child: const CircularProgressIndicator()),
+              : const Center(child: CircularProgressIndicator()),
         );
       },
     );
@@ -91,18 +139,17 @@ class _ProductDetailState extends State<ProductDetail> {
                         onPressed: () {
                           if (widget.item.quantity > 0) {
                             setState(() {
-                              widget.item.quantity--;
+                              quantity--;
                             });
                           }
                         },
-                        icon: Icon(Icons.remove)),
+                        icon: const Icon(Icons.remove)),
                     SizedBox(
-                        width: 30,
-                        child: Center(child: Text('${widget.item.quantity}'))),
+                        width: 30, child: Center(child: Text('$quantity'))),
                     IconButton(
                         onPressed: () {
                           setState(() {
-                            widget.item.quantity++;
+                            quantity++;
                           });
                         },
                         icon: Icon(Icons.add)),
@@ -121,11 +168,47 @@ class _ProductDetailState extends State<ProductDetail> {
                   backgroundColor: MaterialStateColor.resolveWith(
                       (states) => Colors.purpleAccent)),
               child: Text('Add'),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  if (cartItems.isNotEmpty) {
+                    if (cartItems.contains(widget.item)) {
+                      _updateItem();
+                    } else {
+                      _addItems();
+                    }
+                  } else {
+                    _addItems();
+                  }
+                });
+              },
             ),
           )
         ]),
       ),
     );
+  }
+
+  //add new item
+  void _addItems() {
+    if (quantity > 0) {
+      cartItems.add(widget.item);
+    } else {
+      _snackBarWidget.content = 'Quantity should be more than 0';
+      _snackBarWidget.showSnack();
+    }
+  }
+
+  //update current item
+  void _updateItem() {
+    for (var item in cartItems) {
+      if (item.id == widget.item.id) {
+        if (quantity > 0) {
+          item.quantity += quantity;
+        } else {
+          _snackBarWidget.content = 'Quantity should be more than 0';
+          _snackBarWidget.showSnack();
+        }
+      }
+    }
   }
 }
