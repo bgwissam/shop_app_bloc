@@ -26,13 +26,14 @@ class _CartDetailsState extends State<CartDetails> {
       builder: (context, state) {
         if (state is PageLoaded) {
           cartItems = state.cartProducts.items;
-          print('the cartItems 2: $cartItems');
+          print('the cartItems 1: $cartItems');
           _isLoading = false;
           _totalValueCalculation();
         }
         if (state is ItemAddingState) {
           cartItems = state.cartItems;
           _isLoading = false;
+          print('the cartItems 2: $cartItems');
           _totalValueCalculation();
         }
         if (state is ItemAddedState) {
@@ -175,9 +176,11 @@ class _CartDetailsState extends State<CartDetails> {
   }
 
   void _totalValueCalculation() {
-    totalValue = 0.0;
-    for (var item in cartItems) {
-      totalValue += item.quantity * item.price;
+    if (cartItems != null) {
+      totalValue = 0.0;
+      for (var item in cartItems) {
+        totalValue += item.quantity * item.price;
+      }
     }
   }
 

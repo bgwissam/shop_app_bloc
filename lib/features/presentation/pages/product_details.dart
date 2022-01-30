@@ -28,6 +28,7 @@ class _ProductDetailState extends State<ProductDetail> {
       builder: (context, state) {
         if (state is PageLoaded) {
           _isLoading = false;
+          cartItems = state.cartProducts.items;
         }
         if (state is ItemAddingState) {
           cartItems = state.cartItems;
@@ -66,7 +67,7 @@ class _ProductDetailState extends State<ProductDetail> {
                     Positioned(
                       right: 15,
                       bottom: 10,
-                      child: cartItems != null && cartItems.isNotEmpty
+                      child: cartItems != null
                           ? Container(
                               padding: const EdgeInsets.all(2),
                               child: Text(
@@ -126,7 +127,7 @@ class _ProductDetailState extends State<ProductDetail> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('Quantity'),
+                const Text('Quantity'),
                 const SizedBox(
                   width: 60,
                 ),
@@ -170,7 +171,7 @@ class _ProductDetailState extends State<ProductDetail> {
               child: Text('Add'),
               onPressed: () {
                 setState(() {
-                  if (cartItems.isNotEmpty) {
+                  if (cartItems != null || cartItems.isNotEmpty) {
                     if (cartItems.contains(widget.item)) {
                       _updateItem();
                     } else {
@@ -191,6 +192,7 @@ class _ProductDetailState extends State<ProductDetail> {
   //add new item
   void _addItems() {
     if (quantity > 0) {
+      widget.item.quantity = quantity;
       cartItems.add(widget.item);
     } else {
       _snackBarWidget.content = 'Quantity should be more than 0';

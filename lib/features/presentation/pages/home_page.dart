@@ -119,7 +119,8 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(
                               builder: (_) => BlocProvider.value(
                                     value: BlocProvider.of<ShopBloc>(context)
-                                      ..add(AddingToCartEvent()),
+                                      ..add(AddingToCartEvent(
+                                          cartItems: cartItems)),
                                     child:
                                         ProductDetail(item: storeItems[index]),
                                   )));
