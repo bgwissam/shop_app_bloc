@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/features/domain/model/product_model.dart';
@@ -26,14 +27,12 @@ class _CartDetailsState extends State<CartDetails> {
       builder: (context, state) {
         if (state is PageLoaded) {
           cartItems = state.cartProducts.items;
-          print('the cartItems 1: $cartItems');
           _isLoading = false;
           _totalValueCalculation();
         }
         if (state is ItemAddingState) {
           cartItems = state.cartItems;
           _isLoading = false;
-          print('the cartItems 2: $cartItems');
           _totalValueCalculation();
         }
         if (state is ItemAddedState) {
@@ -168,8 +167,11 @@ class _CartDetailsState extends State<CartDetails> {
                         ),
                       ));
                 })
-            : Center(
-                child: Text('You cart is empty'),
+            : const Center(
+                child: Text('You cart is empty',
+                    style: TextStyle(
+                      fontSize: 25,
+                    )),
               ),
       ),
     );
@@ -186,7 +188,6 @@ class _CartDetailsState extends State<CartDetails> {
 
   //Will show the item total
   Widget _buildBottomNavigator() {
-    print('the cartItems: $cartItems');
     return cartItems != null && cartItems.isNotEmpty
         ? Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
@@ -199,9 +200,17 @@ class _CartDetailsState extends State<CartDetails> {
                     topRight: Radius.circular(25))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [const Text('Total Value:'), Text('$totalValue')],
+              children: [
+                const Text('Total Value:',
+                    style: TextStyle(
+                      fontSize: 18,
+                    )),
+                Text('$totalValue',
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold))
+              ],
             ),
           )
-        : SizedBox.shrink();
+        : const SizedBox.shrink();
   }
 }

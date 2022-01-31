@@ -39,6 +39,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: BlocBuilder<ShopBloc, ShopState>(
         builder: (context, state) {
+          print('the state: $state');
           return Scaffold(
               appBar: AppBar(
                 title: const Text('Demo Shopping App'),
